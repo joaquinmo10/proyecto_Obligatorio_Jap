@@ -1,0 +1,103 @@
+let productsArray = [];
+
+
+function showProducts(array){
+    let htmlContentToAppend = "";
+
+        for(var i = 0;array.category.length> i ; i++){ 
+            let products = array.products[i];
+            console.log(products);
+        htmlContentToAppend += `
+        <div class="list-group-item list-group-item-action">
+            <div class="row">
+                <div class="col-3">
+                <img src="` + products.image + `" alt="product image" class="img-thumbnail">
+                </div>
+                <div class="col">
+                    <div class="d-flex w-100 justify-content-between">
+                        <div class"mb-1">
+                        <h4>`+ products.name +" "+"- "+ products.currency +" "+ products.cost+ `</h4> 
+                        <p> `+ products.description +`</p> 
+                        </div>
+                        <small class="text-muted">` + products.soldCount + ` artículos</small> 
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        `
+        
+        document.getElementById("listaDeAutos").innerHTML = htmlContentToAppend; 
+    }
+    document.getElementById("subtitulo_cat").innerHTML = "Verás aquí todos los productos de la categoría " + array.catName;
+}
+
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    getJSONData(PRODUCTS_URL).then(function(resultObj){
+        if (resultObj.status === "ok")
+        {
+            productsArray = resultObj.data;
+            showProducts(productsArray);
+        }
+    });
+});
+
+let Min = document.getElementById("rangeFilterCountMin");
+let Max = document.getElementById("rangeFilterCountMax");
+
+function Filtrado(){
+    let filtered = productsArray;
+
+    if(Max.value != ""){
+        filtered = filtered.filter(products => 
+            products.cost < Max)
+    }
+    if(Min.value != ""){
+        filtered = filtered.filter(category => 
+            category.cost > Min)
+    }
+    showProducts(filtered)
+}
+
+
+function desc(){
+   productsArray.sort(function(a,b){
+    return b.cost - a.cost
+   })
+}
+
+function asc(){
+    productsArray.sort(function(a,b){
+        return a.cost - b.cost
+    })
+    
+}
+
+function rel(){
+    productsArray.sort( function(a,b){
+        return b.soldCount - a.soldCount
+    })
+}
+
+function sortProductsDown(){
+    showProducts(desc)
+}
+
+function sortProductsUp(){
+    showProducts(asc)
+}
+
+function sortProductsRel(){
+    showProducts(rel)
+}
+
+
+document.getElementById("rangeFilterCountMin").addEventListener('input', Filtrado);
+document.getElementById("rangeFilterCountMax").addEventListener('input', Filtrado);
+
+document.getElementById("sortAsc").addEventListener('input', sortProductsUp);
+document.getElementById("sortDesc").addEventListener('input', sortProductsDown);
+document.getElementById("sortByCount").addEventListener('input', sortProductsRel);
+
