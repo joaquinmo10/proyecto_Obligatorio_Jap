@@ -98,9 +98,9 @@ function productosRelacionados(product){
   </div>`
   };
 
-for(const relatedProd of product.relatedProducts){
+for(const prodRel of product.relatedProducts){
 
-      document.getElementById(relatedProd.id).addEventListener("click", function() {
+      document.getElementById(prodRel.id).addEventListener("click", function() {
           localStorage.setItem("productID", relatedProd.id);
           window.location = "product-info.html"
 
